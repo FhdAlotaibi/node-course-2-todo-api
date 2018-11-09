@@ -20,7 +20,7 @@ mongoClient.connect('mongodb://localhost:27017/TodoApp',(error,client)=>{
   //   console.log(JSON.stringify(result.ops,undefined,2));
   // })
 
-  db.collection('users').insertOne({name:"FAHAD",age:27,location:"Riyadh, Saudi Arabia"},(error,result)=>{
+  db.collection('Todos').deleteMany({text:'Walk the dog'},(error,result)=>{
     if(error){
       return console.log("unable to create collection users",error);
     }
