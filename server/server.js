@@ -1,6 +1,7 @@
-var express=require('express')
-var bodyParser=require('body-parser')
-var {ObjectID}=require('mongodb')
+const express=require('express')
+const bodyParser=require('body-parser')
+const {ObjectID}=require('mongodb')
+const _=require('lodash')
 
 var {mongoose}=require('./db/mongoose.js')
 var {Todo}=require('./models/todo')
@@ -62,6 +63,31 @@ app.delete('/todos/:id',(req,res)=>{
 
 app.listen(port,()=>{
   console.log('Started on port '+port);
+})
+
+app.patch('/todos/:id',(req,res)=>{
+  var id=req.params.id
+  var body=_.pick(req.body,['text','completed'])
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(400).send("Invalid Id")
+  }
+
+  if (_.isBoolean(body.completed) && _.isString(body.text)) {
+    if (body.completed) {
+      body.completedAt=new Date().getTime()
+    }else{
+      body.completedAt=null
+    }
+
+    Todo.findByIdAndUpdate(id,{$set:body},{new:true}).then((result)=>{
+      res.send(result)
+    }).catch((error)=>{
+      res.status(400).send()
+    })
+  }else {
+    return res.status(400).send("invalid data format")
+  }
 })
 
 module.exports={app}
