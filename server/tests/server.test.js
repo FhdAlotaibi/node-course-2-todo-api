@@ -130,4 +130,38 @@ describe('DELETE /todos/:id ',()=>{
     .end(done)
   })
 
+})
+
+describe('PATCH /todos/:id',()=>{
+
+  it('should update the todo',(done)=>{
+    var id=todos[0]._id.toHexString()
+    var newText="sorry"
+    request(app)
+    .patch('/todos/'+id)
+    .send({text:newText, completed:true})
+    .expect(200)
+    .expect((res)=>{
+      expect(res.body.text).toBe(newText);
+      expect(typeof res.body.completedAt).toBe('number');
+      expect(res.body.completed).toBe(true);
+    })
+    .end(done)
+
   })
+
+  it('should clear completedAt when todo is not completed',(done)=>{
+    var id=todos[0]._id.toHexString()
+    var newText="sorry"
+    request(app)
+    .patch('/todos/'+id)
+    .send({text:newText,completed:false})
+    .expect(200)
+    .expect((res)=>{
+      expect(res.body.completedAt).toBeFalsy()
+    }).end(done)
+
+  })
+
+
+})
