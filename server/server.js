@@ -62,9 +62,6 @@ app.delete('/todos/:id',(req,res)=>{
   })
 })
 
-app.listen(port,()=>{
-  console.log('Started on port '+port);
-})
 
 app.patch('/todos/:id',(req,res)=>{
   var id=req.params.id
@@ -90,5 +87,24 @@ app.patch('/todos/:id',(req,res)=>{
     return res.status(400).send("invalid data format")
   }
 })
+
+app.post('/users',(req,res)=>{
+  var body=_.pick(req.body,['email','password'])
+
+  var newUser=new User(body)
+
+  newUser.save().then(()=>{
+    return newUser.generatAuthToken()
+  }).then((token)=>{
+    res.header('x-auth',token).send(newUser)
+  }).catch((e)=>{
+    res.status(400).send(e)
+  })
+})
+
+app.listen(port,()=>{
+  console.log('Started on port '+port);
+})
+
 
 module.exports={app}
