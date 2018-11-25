@@ -102,6 +102,11 @@ app.post('/users',(req,res)=>{
   })
 })
 
+app.get('/users/me',(req,res)=>{
+  var token=req.header('x-auth')
+
+})
+
 app.listen(port,()=>{
   console.log('Started on port '+port);
 })
