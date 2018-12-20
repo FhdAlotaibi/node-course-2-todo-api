@@ -43,7 +43,7 @@ UserSchema.methods.toJSON=function (){
 UserSchema.methods.generatAuthToken=function (){
   var user=this
   var access='auth'
-  var token=jwt.sign({_id:user._id.toHexString(),access},"abc123",{ expiresIn: '30000' }).toString()
+  var token=jwt.sign({_id:user._id.toHexString(),access},"abc123",{ expiresIn: "1d" }).toString()
 
   user.tokens=user.tokens.concat([{access,token}])
   return user.save().then(()=>{
@@ -105,6 +105,17 @@ UserSchema.pre('save',function (next){
     next()
   }
 })
+
+UserSchema.methods.deleteToken =function(token){
+  var user=this
+  return user.update({
+    $pull:{
+      tokens:{
+        token
+      }
+    }
+  })
+}
 
 var User = mongoose.model('User',UserSchema)
 
