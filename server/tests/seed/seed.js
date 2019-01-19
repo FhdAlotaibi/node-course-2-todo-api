@@ -6,11 +6,13 @@ const jwt = require('jsonwebtoken')
 const todos=[
   {
     _id:new ObjectID(),
-    text:'First test todo'
+    text:'First test todo',
+    userId:userOneID
   },
   {
     _id:new ObjectID(),
-    text:'Second test todo'
+    text:'Second test todo',
+    userId:userTwoID
   }
 ]
 
